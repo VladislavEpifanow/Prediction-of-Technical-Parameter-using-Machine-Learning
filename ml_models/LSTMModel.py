@@ -7,7 +7,7 @@ import joblib
 
 
 class LSTMTimeSeries:
-    def __init__(self, model_name, scaler_name, prev_features=60):
+    def __init__(self, model_name, scaler_name, prev_features=60,time_series=None):
         self.model_name = model_name
         self.prev_features = prev_features
         try:
@@ -55,8 +55,12 @@ class LSTMTimeSeries:
         res = self.sc.inverse_transform(res)
         return res[0][0]
 
-    def predict_n_step(self, n_step):
-        pass
+    def predict_n_step(self, data, n_step):
+        buffer = data[-self.prev_features:]
+        for i in range(n_step):
+            buffer = np.append(buffer, self.predict_one_step(buffer[-60:]))
+        return list(buffer[-n_step:])
+
 
     def load_model(self, model_path, scaler_path):
         self.model = load_model(model_path)
