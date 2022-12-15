@@ -11,6 +11,7 @@ class LSTMTimeSeries:
         self.model_name = model_name
         self.prev_features = prev_features
         try:
+            print(model_name, scaler_name)
             self.load_model(model_name, scaler_name)
         except:
             print("Models wasn't found.Creating new")
@@ -28,7 +29,7 @@ class LSTMTimeSeries:
             self.model.add(Dense(units=1))
             self.model.summary()
 
-    def fit(self, time_series, optimizer='adam', epoch=500, batch_size=16):
+    def fit(self, time_series, optimizer='adam', epoch=20, batch_size=16):
         self.sc = MinMaxScaler(feature_range=(0, 1))
         ts_scaled = self.sc.fit_transform(time_series.reshape(-1, 1))
 
